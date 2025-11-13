@@ -1,0 +1,145 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+	--foreground-rgb: 255, 255, 255;
+	--background-start-rgb: 0, 0, 0;
+	--background-end-rgb: 0, 0, 0;
+}
+
+body {
+	color: rgb(var(--foreground-rgb));
+	background: #000000;
+	margin: 0;
+	padding: 0;
+	overflow-x: hidden;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+	width: 8px;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(10, 10, 15, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+	background: rgba(139, 92, 246, 0.5);
+	border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: rgba(139, 92, 246, 0.7);
+}
+
+/* Glow effects */
+.glow-purple {
+	box-shadow:
+		0 0 20px rgba(139, 92, 246, 0.6),
+		0 0 60px rgba(139, 92, 246, 0.4);
+}
+
+.glow-purple-intense {
+	box-shadow:
+		0 0 40px rgba(139, 92, 246, 0.8),
+		0 0 80px rgba(139, 92, 246, 0.5),
+		0 0 120px rgba(139, 92, 246, 0.3);
+	filter: drop-shadow(0 0 30px rgba(139, 92, 246, 0.6));
+}
+
+/* Input focus glow */
+.input-glow:focus {
+	outline: none;
+	border-color: #8b5cf6;
+	box-shadow:
+		0 0 0 2px rgba(139, 92, 246, 0.2),
+		0 0 20px rgba(139, 92, 246, 0.4);
+}
+
+/* Particle animation */
+@keyframes particle-float {
+	0%,
+	100% {
+		transform: translate(0, 0);
+		opacity: 0.3;
+	}
+	25% {
+		transform: translate(10px, -10px);
+		opacity: 0.6;
+	}
+	50% {
+		transform: translate(-5px, -20px);
+		opacity: 0.8;
+	}
+	75% {
+		transform: translate(-10px, -10px);
+		opacity: 0.6;
+	}
+}
+
+.particle {
+	animation: particle-float 4s ease-in-out infinite;
+}
+
+/* Markdown styles */
+.prose-invert {
+	color: rgb(229, 231, 235);
+}
+
+.prose-invert h1,
+.prose-invert h2,
+.prose-invert h3,
+.prose-invert h4 {
+	color: rgb(249, 250, 251);
+	font-weight: 600;
+}
+
+.prose-invert strong {
+	color: rgb(249, 250, 251);
+	font-weight: 600;
+}
+
+.prose-invert table {
+	border-collapse: collapse;
+	width: 100%;
+	margin: 1rem 0;
+	font-size: 0.875rem;
+}
+
+.prose-invert thead {
+	border-bottom: 2px solid rgba(139, 92, 246, 0.5);
+}
+
+.prose-invert th {
+	padding: 0.75rem;
+	text-align: left;
+	font-weight: 600;
+	color: rgb(249, 250, 251);
+	background: rgba(139, 92, 246, 0.1);
+}
+
+.prose-invert td {
+	padding: 0.75rem;
+	border-bottom: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.prose-invert tbody tr:hover {
+	background: rgba(139, 92, 246, 0.05);
+}
+
+.prose-invert p {
+	margin: 0.75rem 0;
+	line-height: 1.6;
+}
+
+.prose-invert ul,
+.prose-invert ol {
+	margin: 0.75rem 0;
+	padding-left: 1.5rem;
+}
+
+.prose-invert li {
+	margin: 0.25rem 0;
+}
