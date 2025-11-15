@@ -3,7 +3,9 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeKatex from "rehype-katex";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import GlowingSphere from "@/components/GlowingSphere";
 
 interface Message {
@@ -13,16 +15,43 @@ interface Message {
 	timestamp: number;
 }
 
+// Helper function to convert [ ] brackets to $$ $$ for display math
+const convertLatexBrackets = (text: string): string => {
+	// Convert [ ... ] to $$ ... $$ for display equations (with multiline support)
+	return text.replace(/\[\s*([\s\S]*?)\s*\]/g, (match, formula) => {
+		// Check if it's actually a LaTeX formula (contains backslash or common math symbols)
+		if (formula.includes("\\") || formula.match(/[=+\-*/^_{}]/)) {
+			return `\n$$${formula.trim()}$$\n`;
+		}
+		// If not a formula, keep the original brackets
+		return match;
+	});
+};
+
 export default function Home() {
 	const [input, setInput] = useState("");
 	const [mounted, setMounted] = useState(false);
 	const [messages, setMessages] = useState<Message[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [sessionId, setSessionId] = useState<string>("");
 
-	// Load chat history from session storage on mount
+	// Generate or retrieve session ID on mount
 	useEffect(() => {
 		setMounted(true);
+
+		// Check if sessionId exists in sessionStorage
+		let storedSessionId = sessionStorage.getItem("sessionId");
+
+		if (!storedSessionId) {
+			// Generate new UUID for session
+			storedSessionId = crypto.randomUUID();
+			sessionStorage.setItem("sessionId", storedSessionId);
+		}
+
+		setSessionId(storedSessionId);
+
+		// Load chat history
 		const savedMessages = sessionStorage.getItem("chatHistory");
 		if (savedMessages) {
 			try {
@@ -59,7 +88,10 @@ export default function Home() {
 							"Content-Type": "application/json",
 							Authorization: "Basic " + btoa("tanish:tanish28"),
 						},
-						body: JSON.stringify({ query: userQuery }),
+						body: JSON.stringify({
+							query: userQuery,
+							sessionID: sessionId,
+						}),
 					},
 				);
 
@@ -126,7 +158,7 @@ export default function Home() {
 				setIsLoading(false);
 			}
 		},
-		[input, isLoading],
+		[input, isLoading, sessionId],
 	);
 
 	const hasMessages = useMemo(
@@ -171,7 +203,7 @@ export default function Home() {
 							className="mb-8 px-4 text-center text-3xl font-bold tracking-tight text-white sm:mb-10 sm:text-4xl md:mb-12 md:text-5xl lg:text-6xl"
 						>
 							<span className="bg-gradient-to-r from-purple-400 via-purple-500 to-blue-500 bg-clip-text text-transparent">
-								Ask Me Anything
+								I AM AIML RAG BOT
 							</span>
 						</motion.h1>
 					)}
@@ -207,8 +239,11 @@ export default function Home() {
 									<div className="flex justify-start">
 										<div className="max-w-[95%] rounded-2xl rounded-tl-sm bg-background/60 border border-purple-500/20 px-4 py-3 backdrop-blur-sm">
 											<div className="prose prose-invert prose-sm md:prose-base max-w-none">
-												<ReactMarkdown remarkPlugins={[remarkGfm]}>
-													{message.response}
+												<ReactMarkdown
+													remarkPlugins={[remarkGfm, remarkMath]}
+													rehypePlugins={[rehypeKatex]}
+												>
+													{convertLatexBrackets(message.response)}
 												</ReactMarkdown>
 											</div>
 										</div>
@@ -307,7 +342,8 @@ export default function Home() {
 								transition={{ duration: 1, delay: 1.2, ease: "easeOut" }}
 								className="mt-4 px-4 text-center text-xs text-gray-500 sm:text-sm"
 							>
-								Powered by AI • Ask anything about your Python course materials
+								Made by Tanish and Tanaa so that you can understand intro to
+								AIML subject better
 							</motion.p>
 						)}
 					</AnimatePresence>

@@ -143,3 +143,31 @@ body {
 .prose-invert li {
 	margin: 0.25rem 0;
 }
+
+/* KaTeX Math Formula Styles */
+.katex {
+	font-size: 1.1em;
+}
+
+.katex-display {
+	margin: 1.5rem 0;
+	padding: 1rem;
+	background: rgba(139, 92, 246, 0.05);
+	border-left: 3px solid rgba(139, 92, 246, 0.5);
+	border-radius: 0.5rem;
+	overflow-x: auto;
+}
+
+.katex-display > .katex {
+	text-align: center;
+}
+
+/* Inline math */
+.prose-invert .katex {
+	color: rgb(249, 250, 251);
+}
+
+/* Math delimiters color */
+.katex .mord {
+	color: rgb(229, 231, 235);
+}
